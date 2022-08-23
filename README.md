@@ -9,7 +9,6 @@ The snapshots can be used with the provided utility or downloaded and used indep
 | Ethereum | Erigon | Archive   | erigon_archive |
 | Ethereum | Geth   | Light     | geth_light     |
 | Ethereum | Geth   | Full      | geth_full      |
-| Ethereum | Geth   | Archive   | geth_archive   |
 
 
 ## Where Do Snapshots Live?
