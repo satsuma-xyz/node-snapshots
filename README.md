@@ -7,7 +7,6 @@ The snapshots can be used with the provided utility or downloaded and used indep
 | Chain    | Client | Node Type | Snapshot Name  |
 |----------|--------|-----------|----------------|
 | Ethereum | Erigon | Archive   | erigon_archive |
-| Ethereum | Geth   | Light     | geth_light     |
 | Ethereum | Geth   | Full      | geth_full      |
 
 
@@ -49,13 +48,10 @@ Here are some numbers of how long it takes to stand up clients from snapshots, b
 
 | Chain    | Client         | Time To Download, Extract & Launch | Time To Catch Up To Latest Block | Snapshot Size | Snapshot Age  | Instance Type                          |
 |----------|----------------|------------------------------------|---------------------------------|---------------|---------------|----------------------------------------|
-| Ethereum | geth_light     | 5 seconds                          | 0[^1]                           | 325.0 MiB     | 10 hours      | EC2 im4.2x (8 CPU (ARM), 32GB RAM)     |
 | Ethereum | geth_full      | 78 minutes                         | 93 minutes                      | 746.1 GiB     | 30 hours      | EC2 im4.2x (8 CPU (ARM), 32GB RAM)     |
-| Ethereum | erigon_archive | 90 minutes                         | 70 minutes                      | 621.6 GiB     | 13 hours      | EC2 im4.2x (8 CPU (ARM), 32GB RAM)[^2] |
+| Ethereum | erigon_archive | 90 minutes                         | 70 minutes                      | 621.6 GiB     | 13 hours      | EC2 im4.2x (8 CPU (ARM), 32GB RAM)[^1] |
 
-[^1]: geth_light numbers are a bit meaningless. This snapshot is mostly used for fast testing/iteration.
-
-[^2]: erigon test was run on an ARM instance and this required a bit of hackery because the [thorax dockerhub](https://hub.docker.com/r/thorax/erigon/tags) account doesn't appear to include ARM images. The following workaround was used:  (1.) run setup.sh as normal. (2.) checkout [erigon from github](https://github.com/ledgerwatch/erigon/) at the correct tag. We have been using [v2022.08.01](https://github.com/ledgerwatch/erigon/releases/tag/v2022.08.01). (3) cd to the erigon repo and run ```DOCKER_BUILDKIT=1 docker build .``` (4.) edit the launcher.sh to reference the image you just built instead of the ```${dockerhub_repo}:${dockerhub_tag}```
+[^1]: erigon test was run on an ARM instance and this required a bit of hackery because the [thorax dockerhub](https://hub.docker.com/r/thorax/erigon/tags) account doesn't appear to include ARM images. The following workaround was used:  (1.) run setup.sh as normal. (2.) checkout [erigon from github](https://github.com/ledgerwatch/erigon/) at the correct tag. We have been using [v2022.08.01](https://github.com/ledgerwatch/erigon/releases/tag/v2022.08.01). (3) cd to the erigon repo and run ```DOCKER_BUILDKIT=1 docker build .``` (4.) edit the launcher.sh to reference the image you just built instead of the ```${dockerhub_repo}:${dockerhub_tag}```
 
 ## Future Work
 
