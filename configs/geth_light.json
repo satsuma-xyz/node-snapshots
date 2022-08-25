@@ -2,8 +2,8 @@
   "snapshots_bucket": "satsuma-snapshots",
   "chain": "eth",
   "client": "geth_light",
-  "release": "v1.10.20",
-  "dockerhub_src": "ethereum/client-go",
+  "dockerhub_tag": "v1.10.20",
+  "dockerhub_repo": "ethereum/client-go",
   "docker_port_mappings": "-p 8545:8545 -p 30303:30303",
   "docker_cmd": "--syncmode light --http --http.addr 0.0.0.0"
 }
