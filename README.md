@@ -30,11 +30,11 @@ There are two scripts:
 1. a general-purpose setup script, ```setup.sh``` which installs essential components.
 2. a client-specific script, ```launcher.sh``` which downloads a snapshot from S3 and uses it to seed a new client. This script takes a client name as an argument. The name of the client corresponds to a JSON configuration file in the "configs" folder with information about the client, version, etc.
 
-### Example: Launching a Geth Archive Node
+### Example: Launching a Geth Full Node
 
 1. Spin up an Ubuntu machine with an attached volume
-2. Run ```setup.sh``` to install necessary software
-3. Run ```launcher.sh --client geth_archive```
+2. Run ```./setup.sh``` to install necessary software
+3. Run ```./launcher.sh --client geth_full --datadir /data/mainnet```
 
 The launcher.sh script reads configuration data from a json config file, which tells it where to find the snapshot, which docker image to use, what command to run, etc. The script downloads and unpacks an archive of the most recent snapshot from s3 (this can take a while) and spins up a docker container running the requested client. It then monitors the client until it is at the head of the chain and reports when it is ready.
 
