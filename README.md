@@ -5,55 +5,66 @@ A basic utility to restore a blockchain client from a snapshot stored on AWS S3.
 The snapshots can be used with the provided utility or downloaded and used independently. The list of snapshots is currently as follows (with more to follow):
 
 | Chain    | Client | Node Type | Snapshot Name  |
-|----------|--------|-----------|----------------|
+| -------- | ------ | --------- | -------------- |
 | Ethereum | Erigon | Archive   | erigon_archive |
 | Ethereum | Geth   | Full      | geth_full      |
 
-
 ## Where Do Snapshots Live?
 
-By default, snapshots are written to ```s3://satsuma-snapshots/```. This bucket is in the us-east-1 region of AWS and it is configured for "requester pays" transfers.
+By default, snapshots are written to `s3://satsuma-snapshots/`. This bucket is in the us-east-1 region of AWS and it is configured for "requester pays" transfers.
 
 The structure of this bucket is to prefix a key with the chain being snapshotted (eth, polygon, etc), then the name of the client, the version, and finally the snapshots themselves. Example:
+
 ```
 s3://satsuma-snapshots/eth/erigon_archive/v2022.08.01/erigon_archive_1660627832.tar.zstd
 ```
-This path contains the snapshot for timestamp ```1660627832``` for version ```v2022.08.01``` of the ```erigon``` client running an ```archive``` node on the ```eth``` network.
+
+This path contains the snapshot for timestamp `1660627832` for version `v2022.08.01` of the `erigon` client running an `archive` node on the `eth` network.
 
 ## Instructions
 
 In addition to the snapshots, we have provided some basic scripts to help you quickly get a node up and running if you're using this setup.
 
-*Requirements:* The snapshotting logic must run on a debian-based OS.
+_Requirements:_ The snapshotting logic must run on a debian-based OS.
 
 There are two scripts:
-1. a general-purpose setup script, ```setup.sh``` which installs essential components.
-2. a client-specific script, ```launcher.sh``` which downloads a snapshot from S3 and uses it to seed a new client. This script takes a client name as an argument. The name of the client corresponds to a JSON configuration file in the "configs" folder with information about the client, version, etc.
+
+1. a general-purpose setup script, `setup.sh` which installs essential components.
+2. a client-specific script, `launcher.sh` which downloads a snapshot from S3 and uses it to seed a new client. This script takes a client name as an argument. The name of the client corresponds to a JSON configuration file in the "configs" folder with information about the client, version, etc.
 
 ### Example: Launching a Geth Full Node
 
 1. Spin up an Ubuntu machine with an attached volume
-2. Run ```./setup.sh``` to install necessary software
-3. Run ```./launcher.sh --client geth_full --datadir /data/mainnet```
+2. Run `./setup.sh` to install necessary software
+3. Run `./launcher.sh --client geth_full --datadir /data/mainnet`
 
 The launcher.sh script reads configuration data from a json config file, which tells it where to find the snapshot, which docker image to use, what command to run, etc. The script downloads and unpacks an archive of the most recent snapshot from s3 (this can take a while) and spins up a docker container running the requested client. It then monitors the client until it is at the head of the chain and reports when it is ready.
 
-The provided configuration files serve as examples of how to launch various clients. There is also an expectation that the ```satsuma-snapshots``` bucket should contain a recent snapshot for that specific (client,version) pair. If you notice very stale snapshots or a config file that doesn't seem to have a matching snapshot please report the issue.
+The provided configuration files serve as examples of how to launch various clients. There is also an expectation that the `satsuma-snapshots` bucket should contain a recent snapshot for that specific (client,version) pair. If you notice very stale snapshots or a config file that doesn't seem to have a matching snapshot please report the issue.
 
-NOTE: the client name is a bit overloaded. Instead of the client ```geth```, the client names are things like ```geth_archive```, ```geth_full```, etc. This is due to the fact that, although the snapshots run on the same client, the snapshot data differs significantly depending on the mode of the client.
+NOTE: the client name is a bit overloaded. Instead of the client `geth`, the client names are things like `geth_archive`, `geth_full`, etc. This is due to the fact that, although the snapshots run on the same client, the snapshot data differs significantly depending on the mode of the client.
 
 ## Performance and Benchmarking
 
 Here are some numbers of how long it takes to stand up clients from snapshots, based on our experimentation. The choice of hardware (e.g. low-memory machines, network storage drives, etc.) will obviously have an impact, as will network/connectivity (to connect to peers and catch up). There are likely a few optimisations to be made and we will update these numbers as we make improvements.
 
-| Chain    | Client         | Time To Download, Extract & Launch | Time To Catch Up To Latest Block | Snapshot Size | Snapshot Age  | Instance Type                          |
-|----------|----------------|------------------------------------|---------------------------------|---------------|---------------|----------------------------------------|
-| Ethereum | geth_full      | 78 minutes                         | 93 minutes                      | 746.1 GiB     | 30 hours      | EC2 im4.2x (8 CPU (ARM), 32GB RAM)     |
-| Ethereum | erigon_archive | 90 minutes                         | 70 minutes                      | 621.6 GiB     | 13 hours      | EC2 im4.2x (8 CPU (ARM), 32GB RAM)[^1] |
+| Chain    | Client         | Time To Download, Extract & Launch | Time To Catch Up To Latest Block | Snapshot Size | Snapshot Age | Instance Type                          |
+| -------- | -------------- | ---------------------------------- | -------------------------------- | ------------- | ------------ | -------------------------------------- |
+| Ethereum | geth_full      | 78 minutes                         | 93 minutes                       | 746.1 GiB     | 30 hours     | EC2 im4.2x (8 CPU (ARM), 32GB RAM)     |
+| Ethereum | erigon_archive | 90 minutes                         | 70 minutes                       | 621.6 GiB     | 13 hours     | EC2 im4.2x (8 CPU (ARM), 32GB RAM)[^1] |
 
-[^1]: erigon test was run on an ARM instance and this required a bit of hackery because the [thorax dockerhub](https://hub.docker.com/r/thorax/erigon/tags) account doesn't appear to include ARM images. The following workaround was used:  (1.) run setup.sh as normal. (2.) checkout [erigon from github](https://github.com/ledgerwatch/erigon/) at the correct tag. We have been using [v2022.08.01](https://github.com/ledgerwatch/erigon/releases/tag/v2022.08.01). (3) cd to the erigon repo and run ```DOCKER_BUILDKIT=1 docker build .``` (4.) edit the launcher.sh to reference the image you just built instead of the ```${dockerhub_repo}:${dockerhub_tag}```
+[^1]: erigon test was run on an ARM instance and this required a bit of hackery because the [thorax dockerhub](https://hub.docker.com/r/thorax/erigon/tags) account doesn't appear to include ARM images. The following workaround was used: (1.) run setup.sh as normal. (2.) checkout [erigon from github](https://github.com/ledgerwatch/erigon/) at the correct tag. We have been using [v2022.08.01](https://github.com/ledgerwatch/erigon/releases/tag/v2022.08.01). (3) cd to the erigon repo and run `DOCKER_BUILDKIT=1 docker build .` (4.) edit the launcher.sh to reference the image you just built instead of the `${dockerhub_repo}:${dockerhub_tag}`
 
 ## Future Work
 
-* Add support for additional chains, eth2 clients, etc.
-* Produce further benchmarking (different instances, different snapshot ages, etc).
+- Add support for additional chains, eth2 clients, etc.
+- Produce further benchmarking (different instances, different snapshot ages, etc).
+
+## License
+
+Credit to Nathan Bluer for his original work with archiving [BSC](https://github.com/allada/bsc-archive-snapshot) and [mainnet](https://github.com/allada/eth-archive-snapshot).
+
+This repo is licensed under the Apache License, Version 2.0. See [LICENSE]() for details.
+
+Copyright © Riser Data, Inc.
+
