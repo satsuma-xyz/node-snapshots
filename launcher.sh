@@ -59,8 +59,8 @@ fi
 snapshots_bucket=$(jq -r .snapshots_bucket "$config_file")
 chain=$(jq -r .chain "$config_file")
 client=$(jq -r .client "$config_file")
-release=$(jq -r .release "$config_file")
-dockerhub_src=$(jq -r .dockerhub_src "$config_file")
+dockerhub_tag=$(jq -r .dockerhub_tag "$config_file")
+dockerhub_repo=$(jq -r .dockerhub_repo "$config_file")
 docker_port_mappings=$(jq -r .docker_port_mappings "$config_file")
 docker_cmd=$(jq -r .docker_cmd "$config_file")
 start_time=$(date +%s)
@@ -71,8 +71,8 @@ cd $datadir
 # The snapshots are named in a standard format with a timestamp in the name. This means that the lexicographical order
 # of the snapshots is also the creation order. Selecting the last snapshot listed means selecting the most recent
 # snapshot.
-latest=$(aws s3 ls "s3://${snapshots_bucket}/${chain}/${client}/${release}/" | awk '{print $4}' | tail -1)
-aws s3 cp "s3://${snapshots_bucket}/${chain}/${client}/${release}/${latest}" - | pv | /zstd/zstd --long=31 -d | tar -xf -
-docker run -d --name $client -v /$client/:/$client $docker_port_mappings ${dockerhub_src}:${release} $docker_cmd --datadir $datadir
+latest=$(aws s3 ls "s3://${snapshots_bucket}/${chain}/${client}/${dockerhub_tag}/" | awk '{print $4}' | tail -1)
+aws s3 cp "s3://${snapshots_bucket}/${chain}/${client}/${dockerhub_tag}/${latest}" - | pv | /zstd/zstd --long=31 -d | tar -xf -
+docker run -d --name $client -v /$client/:/$client $docker_port_mappings ${dockerhub_repo}:${dockerhub_tag} $docker_cmd --datadir $datadir
 elapsed=$(( $(date +%s) - start_time ))
 echo "Downloaded snapshot and launched docker container in $elapsed seconds."

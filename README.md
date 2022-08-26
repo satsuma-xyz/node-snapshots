@@ -7,9 +7,7 @@ The snapshots can be used with the provided utility or downloaded and used indep
 | Chain    | Client | Node Type | Snapshot Name  |
 |----------|--------|-----------|----------------|
 | Ethereum | Erigon | Archive   | erigon_archive |
-| Ethereum | Geth   | Light     | geth_light     |
 | Ethereum | Geth   | Full      | geth_full      |
-| Ethereum | Geth   | Archive   | geth_archive   |
 
 
 ## Where Do Snapshots Live?
@@ -26,7 +24,7 @@ This path contains the snapshot for timestamp ```1660627832``` for version ```v2
 
 In addition to the snapshots, we have provided some basic scripts to help you quickly get a node up and running if you're using this setup.
 
-*Requirements:* The snapshotting logic must run on an debian-based OS.
+*Requirements:* The snapshotting logic must run on a debian-based OS.
 
 There are two scripts:
 1. a general-purpose setup script, ```setup.sh``` which installs essential components.
@@ -46,7 +44,14 @@ NOTE: the client name is a bit overloaded. Instead of the client ```geth```, the
 
 ## Performance and Benchmarking
 
-//TODO
+Here are some numbers of how long it takes to stand up clients from snapshots, based on our experimentation. The choice of hardware (e.g. low-memory machines, network storage drives, etc.) will obviously have an impact, as will network/connectivity (to connect to peers and catch up). There are likely a few optimisations to be made and we will update these numbers as we make improvements.
+
+| Chain    | Client         | Time To Download, Extract & Launch | Time To Catch Up To Latest Block | Snapshot Size | Snapshot Age  | Instance Type                          |
+|----------|----------------|------------------------------------|---------------------------------|---------------|---------------|----------------------------------------|
+| Ethereum | geth_full      | 78 minutes                         | 93 minutes                      | 746.1 GiB     | 30 hours      | EC2 im4.2x (8 CPU (ARM), 32GB RAM)     |
+| Ethereum | erigon_archive | 90 minutes                         | 70 minutes                      | 621.6 GiB     | 13 hours      | EC2 im4.2x (8 CPU (ARM), 32GB RAM)[^1] |
+
+[^1]: erigon test was run on an ARM instance and this required a bit of hackery because the [thorax dockerhub](https://hub.docker.com/r/thorax/erigon/tags) account doesn't appear to include ARM images. The following workaround was used:  (1.) run setup.sh as normal. (2.) checkout [erigon from github](https://github.com/ledgerwatch/erigon/) at the correct tag. We have been using [v2022.08.01](https://github.com/ledgerwatch/erigon/releases/tag/v2022.08.01). (3) cd to the erigon repo and run ```DOCKER_BUILDKIT=1 docker build .``` (4.) edit the launcher.sh to reference the image you just built instead of the ```${dockerhub_repo}:${dockerhub_tag}```
 
 ## Future Work
 

@@ -8,7 +8,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 apt update
-DEBIAN_FRONTEND=noninteractive apt install -y awscli golang-go pv docker docker-compose clang-12 make jq emacs
+DEBIAN_FRONTEND=noninteractive apt install -y awscli pv docker docker-compose clang-12 make jq 
 
 # Download, setup and install zstd v1.5.2.
 # We use an upgraded version rather than what ubuntu uses because
