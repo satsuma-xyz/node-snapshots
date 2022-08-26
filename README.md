@@ -55,5 +55,5 @@ Here are some numbers of how long it takes to stand up clients from snapshots, b
 
 ## Future Work
 
-- add additional chains, eth2 clients, etc
-- further benchmarking
+* Add support for additional chains, eth2 clients, etc.
+* Produce further benchmarking (different instances, different snapshot ages, etc).
