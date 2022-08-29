@@ -7,8 +7,8 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-SHORT=c:,d:,h
-LONG=config:,datadir:,help
+SHORT=c:,h
+LONG=config:,help
 OPTS=$(getopt -a -n launcher --options $SHORT --longoptions $LONG -- "$@")
 
 eval set -- "$OPTS"
@@ -18,10 +18,6 @@ do
   case "$1" in
     -c | --config )
       config="$2"
-      shift 2
-      ;;
-    -d | --datadir)
-      datadir="$2"
       shift 2
       ;;
     -h | --help)
@@ -44,12 +40,6 @@ then
    exit 1
 fi
 
-if [ -z "$datadir" ]
-then
-   echo "ERROR: Must specify a data dir to write snapshot to."
-   exit 1
-fi
-
 config_file="configs/${config}.json"
 if ! test -f "$config_file"; then
     echo "ERROR: $config file does not exist."
@@ -64,6 +54,7 @@ dockerhub_repo=$(jq -r .dockerhub_repo "$config_file")
 docker_port_mappings=$(jq -r .docker_port_mappings "$config_file")
 docker_cmd=$(jq -r .docker_cmd "$config_file")
 start_time=$(date +%s)
+datadir=$(jq -r .datadir "$config_file")
 
 cd $datadir
 
@@ -73,6 +64,6 @@ cd $datadir
 # snapshot.
 latest=$(aws s3 ls "s3://${snapshots_bucket}/${chain}/${client}/${dockerhub_tag}/" | awk '{print $4}' | tail -1)
 aws s3 cp "s3://${snapshots_bucket}/${chain}/${client}/${dockerhub_tag}/${latest}" - | pv | /zstd/zstd --long=31 -d | tar -xf -
-docker run -d --name $client -v /$client/:/$client $docker_port_mappings ${dockerhub_repo}:${dockerhub_tag} $docker_cmd --datadir $datadir
+docker run -d --name $client -v ${datadir}:${datadir} $docker_port_mappings ${dockerhub_repo}:${dockerhub_tag} $docker_cmd --datadir ${datadir}
 elapsed=$(( $(date +%s) - start_time ))
 echo "Downloaded snapshot and launched docker container in $elapsed seconds."

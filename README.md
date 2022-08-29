@@ -15,9 +15,9 @@ Syncing nodes from genesis typically takes days or weeks. Snapshots allow you to
 Pick a supported snapshot (i.e. `geth_full`) and run:
 
 ```bash
-mkdir /data/mainnet
+mkdir /geth_full/data
 ./setup.sh
-./launcher.sh --client geth_full --datadir /data/mainnet
+./launcher.sh --client geth_full
 ```
 
 ## Snapshot Access
