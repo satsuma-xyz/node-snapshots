@@ -73,6 +73,6 @@ cd $datadir
 # snapshot.
 latest=$(aws s3 ls "s3://${snapshots_bucket}/${chain}/${client}/${dockerhub_tag}/" | awk '{print $4}' | tail -1)
 aws s3 cp "s3://${snapshots_bucket}/${chain}/${client}/${dockerhub_tag}/${latest}" - | pv | /zstd/zstd --long=31 -d | tar -xf -
-docker run -d --name $client -v /$client/:/$client $docker_port_mappings ${dockerhub_repo}:${dockerhub_tag} $docker_cmd --datadir $datadir
+docker run -d --name $client -v ${datadir}:/${client}/data $docker_port_mappings ${dockerhub_repo}:${dockerhub_tag} $docker_cmd
 elapsed=$(( $(date +%s) - start_time ))
 echo "Downloaded snapshot and launched docker container in $elapsed seconds."
