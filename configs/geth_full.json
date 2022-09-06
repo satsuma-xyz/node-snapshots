@@ -2,7 +2,7 @@
   "snapshots_bucket": "satsuma-snapshots",
   "chain": "eth",
   "client": "geth_full",
-  "dockerhub_tag": "v1.10.20",
+  "dockerhub_tag": "v1.10.23",
   "dockerhub_repo": "ethereum/client-go",
   "docker_port_mappings": "-p 8545:8545 -p 30303:30303",
   "docker_cmd": " --datadir /geth_full/data --mainnet --syncmode full --txlookuplimit 0 --http --http.addr 0.0.0.0 --ws --graphql --metrics --metrics.addr 0.0.0.0"

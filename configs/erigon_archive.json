@@ -2,7 +2,7 @@
   "snapshots_bucket": "satsuma-snapshots",
   "chain": "eth",
   "client": "erigon_archive",
-  "dockerhub_tag": "v2022.08.01",
+  "dockerhub_tag": "v2022.08.03",
   "dockerhub_repo": "thorax/erigon",
   "docker_port_mappings": "-p 8545:8545 -p 30303:30303 -p 8546:8546",
   "docker_cmd": "erigon --datadir /erigon_archive/data --chain=mainnet --http --http.vhosts=* --http.addr=0.0.0.0 --http.api=eth,debug,net,trace,web3,erigon,engine --torrent.upload.rate=1kb --metrics --metrics.addr=0.0.0.0"
