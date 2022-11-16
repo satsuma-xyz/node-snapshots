@@ -1,0 +1,9 @@
+{
+  "snapshots_bucket": "satsuma-snapshots",
+  "chain": "arbitrum-one",
+  "client": "nitro_archive",
+  "dockerhub_tag": "v2.0.8-5b9fe9c",
+  "dockerhub_repo": "offchainlabs/nitro-node",
+  "docker_port_mappings": "-p 0.0.0.0:8545:8547 -p 0.0.0.0:8546:8548",
+  "docker_cmd": "--l1.url <Ethereum RPC URL> --l2.chain-id=42161 --http.api=net,web3,eth,debug --http.corsdomain=* --http.addr=0.0.0.0 --http.vhosts=* --node.caching.archive --node.rpc.evm-timeout 300s"
+}
