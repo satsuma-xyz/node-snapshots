@@ -63,6 +63,8 @@ The launcher.sh script reads configuration data from a json config file, which t
 
 The provided configuration files serve as examples of how to launch various clients. There is also an expectation that the `satsuma-snapshots` bucket should contain a recent snapshot for that specific (client,version) pair. If you notice very stale snapshots or a config file that doesn't seem to have a matching snapshot please report an issue.
 
+Note that for `arbitrum_nitro_archive`, you'll need to replace the <Ethereum RPC URL> in the config's `docker_cmd`.
+
 ## Performance and Benchmarking
 
 Here are some numbers of how long it takes to stand up clients from snapshots, based on our experimentation. The choice of hardware (e.g. low-memory machines, network storage drives, etc.) will obviously have an impact, as will network/connectivity (to connect to peers and catch up). There are likely a few optimisations to be made and we will update these numbers as we make improvements.
