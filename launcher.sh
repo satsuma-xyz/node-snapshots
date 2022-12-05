@@ -71,7 +71,7 @@ cd $datadir
 # The snapshots are named in a standard format with a timestamp in the name. This means that the lexicographical order
 # of the snapshots is also the creation order. Selecting the last snapshot listed means selecting the most recent
 # snapshot.
-latest=$(aws s3 ls "s3://${snapshots_bucket}/${chain}/${client}/${dockerhub_tag}/" | awk '{print $4}' | tail -1)
+latest=$(aws s3 ls "s3://${snapshots_bucket}/${chain}/${client}/${dockerhub_tag}/" --request-payer | awk '{print $4}' | tail -1)
 aws s3 cp "s3://${snapshots_bucket}/${chain}/${client}/${dockerhub_tag}/${latest}" - | pv | /zstd/zstd --long=31 -d | tar -xf -
 docker run -d --name $client -v ${datadir}:/${client}/data $docker_port_mappings ${dockerhub_repo}:${dockerhub_tag} $docker_cmd
 elapsed=$(( $(date +%s) - start_time ))
