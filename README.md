@@ -17,7 +17,7 @@ Pick a supported snapshot (i.e. `geth_full`) and run:
 ```bash
 mkdir /data/mainnet
 ./setup.sh
-./launcher.sh --client geth_full --datadir /data/mainnet
+./launcher.sh --config eth_geth_full --datadir /data/mainnet
 ```
 
 ## Snapshot Access
