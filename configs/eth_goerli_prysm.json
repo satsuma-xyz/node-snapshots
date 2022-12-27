@@ -1,0 +1,9 @@
+{
+  "snapshots_bucket": "satsuma-snapshots",
+  "chain": "eth_goerli",
+  "client": "prysm",
+  "dockerhub_tag": "v3.1.2",
+  "dockerhub_repo": "prysmaticlabs/prysm-beacon-chain",
+  "docker_port_mappings": "--network host",
+  "docker_cmd": "beacon-chain --goerli --datadir=/prysm/data --jwt-secret=/jwt/jwt.hex --execution-endpoint=http://localhost:8551 --checkpoint-sync-url=https://goerli.checkpoint-sync.ethpandaops.io  --genesis-beacon-api-url=https://goerli.checkpoint-sync.ethpandaops.io --accept-terms-of-use"
+}
