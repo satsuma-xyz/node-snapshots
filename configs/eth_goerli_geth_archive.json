@@ -1,0 +1,9 @@
+{
+  "snapshots_bucket": "satsuma-snapshots",
+  "chain": "eth_goerli",
+  "client": "geth_archive",
+  "dockerhub_tag": "v1.10.26",
+  "dockerhub_repo": "ethereum/client-go",
+  "docker_port_mappings": "--network host",
+  "docker_cmd": "--datadir /geth_archive/data --goerli --syncmode full --gcmode archive --txlookuplimit 0 --http --http.addr 0.0.0.0 --http.api eth,net,engine,admin --ws --ws.addr 0.0.0.0 --graphql --metrics --metrics.addr 0.0.0.0 --authrpc.jwtsecret /jwt/jwt.hex"
+}

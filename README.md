@@ -44,11 +44,13 @@ This path contains the snapshot at timestamp `1660627832` for version `v2022.08.
 
 These snapshots can be used with the provided scripts or independently. The list of snapshots is currently as follows:
 
-| Chain    | Client | Node Type | Snapshot Name          |
-| -------- | ------ | --------- | ---------------------- |
-| Ethereum | Erigon | Archive   | eth_erigon_archive     |
-| Ethereum | Geth   | Full      | eth_geth_full          |
-| Arbitrum | Nitro  | Archive   | arbitrum_nitro_archive |
+| Chain                  | Client | Node Type | Snapshot Name           |
+| ---------------------- | ------ | --------- | ----------------------- |
+| Ethereum               | Erigon | Archive   | eth_erigon_archive      |
+| Ethereum               | Geth   | Full      | eth_geth_full           |
+| Ethereum Goerli        | Geth   | Archive   | eth_goerli_geth_archive |
+| Ethereum Goerli Beacon | Prysm  | -         | eth_goerli_prysm        |
+| Arbitrum               | Nitro  | Archive   | arbitrum_nitro_archive  |
 
 Looking for another chain or client type? Join our [Telegram community](https://t.me/+9X-jV6P1z45hN2Ux) or open an issue to let us know!
 
